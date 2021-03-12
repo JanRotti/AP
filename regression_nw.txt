@@ -1,0 +1,46 @@
+    /* This is not working code for regression model
+    // calculating data matrix
+    double lambda = 0.1; // learning rate
+    double error = 0;
+    vector<double> X(x.size()*(n+1));
+    for(int i=0;i<=n;i++){
+        for(int j=0;j<x.size();j++){
+            X[j*x.size()+i] = pow(x[j],i);
+        }
+    }
+    // initialize coefficients with 1. Random would be preferable
+    for(int i=0;i<c.size();i++){
+        c[i] = 1;
+    }
+    // stopping point?! Why?
+    vector<double> yall(y.size());
+    cout << "after";
+    // calculate outputs
+    int count = 0;
+    do{
+        cout << "Iteration start";
+        for(int i = 0;i<y.size();i++){
+            yall[i] = 0; // reset
+            for(int j=0;j<c.size();j++){
+                yall[i]+= X[i*x.size()+j] * c[j];
+            } 
+        }
+        cout << "Iteration 1";
+        // calculate error function
+        for(int i=0;i<y.size();i++){
+            error += pow(y[i] - yall[i],2);
+        }
+        // update step
+        cout << "Iteration update";
+        for(int i=0;i<c.size();i++){
+            double g = 0;
+            for(int j=0;j<y.size();j++){
+                g += (y[i] - yall[i])*pow(x[j],i);
+            }
+            g /= y.size();
+            c[i] -= lambda * g;
+        }
+        cout << "Iteration finish";
+        count++;
+        cout << "Iteration: " << count;
+    }while((count<100)&&(error>0.0001)); */
