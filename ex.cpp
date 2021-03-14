@@ -77,7 +77,7 @@ str_circle circle(double x1,double x2,double x3,double y1 ,double y2,double y3){
     // calculation of midpoint using formulas
     xm = b/a; ym = (-xq12 + 2*x12*xm-yq12)/(-2*y12);
     // setting structure properties
-    result.xm = xm; result.ym = ym; result.R = (pow(x1-xm,2)+pow(y1-ym,2));
+    result.xm = xm; result.ym = ym; result.R = sqrt(pow(x1-xm,2)+pow(y1-ym,2));
     return result;
 }
 
