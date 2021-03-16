@@ -2,7 +2,6 @@
 #include<fstream>
 #include<iostream>
 #include<math.h>
-#include<stdio.h>
 #include<vector>
 #include<string>
 
@@ -38,8 +37,7 @@ double H(double);
 
 
 int main(){
-    int task = 6;  
-    cin >> task; cout << endl;
+    int task = 8;  
     switch(task){
         case 1: t1(); break;
         case 2: t2(); break;
@@ -401,9 +399,91 @@ double H(double U){
 }
 
 void t7(){
-    cout << "Execution of Task 7 successful!" << endl;
+    double rho, lambda, cq, v, l, area, peri, alpha;
+    double dx, dt, ca, cb;
+    rho = 1000.0;
+    lambda = 0.6;
+    l = 20.0;
+    cq = 4200.0;
+    v = 0.1;
+    area = 3.14 * pow(10, -4);
+    peri = 0.0628;
+    alpha = 2.5;
+
+    ca = lambda / (rho * cq);
+    cb = (alpha * peri) / (rho * area * cq);
+
+    int diskret_x = 101;
+    int diskret_t = 20000;
+
+    dx = l / (diskret_x - 1);
+    dt = 0.01;
+  
+    vector<double> T(diskret_x, 288.0);
+
+    // boundary conditions
+    T.front() = 318.0;
+    vector<double> TB = T;
+  
+    ofstream out;
+    for (int j = 0; j <= diskret_t; j++) {
+        for (int i = 1; i < diskret_x - 1; ++i) {
+            T[i] = ca * dt * ((TB[i-1] + 2. * TB[i] + TB[i + 1]) / (dx * dx)) - cb * (TB[i] - 288.0) * dt - v * (TB[i] - TB[i-1]) * dt / dx + TB[i];
+            TB = T;
+        }
+        if (j % 2000 == 0) {
+        out.open(string("data/output_") + std::to_string(j));
+        for (int i = 0; i < diskret_x; ++i) {
+            out << i * dx << "," << T[i] << std::endl;
+        }
+        out.close();
+    }
+  }
+    cout << "Execution of Task 8 successful!" << endl;
 }
 
 void t8(){
-    cout << "Execution of Task 8 successful!" << endl;
+    vector<double> y; int n = 101; // discretise
+    double dy = 1./(n-1.);
+    vector<double> u(n,0);
+    for(int i=0;i<n;i++){
+        y.push_back(i*dy);    
+    }
+    
+    // explicit
+    for(int i = 0;i<100000;i++){
+        for(int j=1;j<n-1;j++){ // exclude boundaries!
+            u[j] = (u[j+1] + u[j-1] + pow(dy,2))/2;
+        }
+    }
+    // output
+    ofstream out ("data/canal_explicit.dat");
+    if(out.is_open()){
+        for(int i=0;i<n;i++){
+            out << y[i] << "," << u[i] << endl;
+        }
+        out.close();
+    }
+
+    // implicit
+    vector<vector<double>> A(n,vector<double>(n,0));
+    vector<double> rhs(n,0); double r = pow(dy,2);
+    A[0][0] = -2; A[0][1] = 1;
+    A[n-1][n-1] = -2; A[n-1][n-2] = 1;
+    rhs[0] = 0; rhs[n-1] = 0;
+    for(int i=1;i<n-1;i++){
+        rhs[i] = -r;
+        A[i][i] = -2;
+        A[i][i+1] = 1;
+        A[i][i-1] = 1;
+    }
+    u = gauss(A,rhs);
+    out.open("data/canal_implicit.dat");
+    if(out.is_open()){
+        for(int i=0;i<n;i++){
+            out << y[i] << "," << u[i] << endl;
+        }
+        out.close();
+    }
+    cout << "Execution of Task 7 successful!" << endl;  
 }
